@@ -1,0 +1,28 @@
+name: Update
+
+on:
+  schedule:
+    - cron:  '0 0 * * 0'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download server lists and update list files
+        run: |
+          curl --silent "https://api.nordvpn.com/v1/servers?limit=16384" | jq --raw-output '.[].station' | sort > nord_vpn_ips.txt
+
+      - name: push
+        uses: actions-x/commit@v2
+        with:
+          email: me@example.com
+          name: GitHub Actions
+          branch: main
+          files: '*.txt'
+          repository: https://github.com/jim-liu/nordvpn-servers
+          token: ${{ secrets.GITHUB_TOKEN }}
