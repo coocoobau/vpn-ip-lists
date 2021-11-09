@@ -24,5 +24,5 @@ jobs:
           name: GitHub Actions
           branch: main
           files: '*.txt'
-          repository: https://github.com/jim-liu/nordvpn-servers
+          repository: https://github.com/coocoobau/nordvpn
           token: ${{ secrets.GITHUB_TOKEN }}
