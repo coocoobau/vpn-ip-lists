@@ -2,8 +2,12 @@ name: Update Proton VPN IPs
 on:
   push:
     branches: [ "main" ]
+    paths: 
+      - 'inputs/proton_vpn_logicals.json'
   pull_request:
     branches: [ "main" ]
+    paths: 
+      - 'inputs/proton_vpn_logicals.json'
 
   workflow_dispatch:
 
@@ -16,9 +20,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - name: Update server ips from logicals file
+        run: |
+          cat inputs/proton_vpn_logicals.json| jq  --raw-output '.LogicalServers[].Servers[].EntryIP' | sort | uniq > protonvpn-ips.txt
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Commit and push changes
+        uses: actions-js/push@master
+        with:
+          branch: ${{ github.ref }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: "Automatically updated IP lists from logicals."
