@@ -1,4 +1,4 @@
-name: Update
+name: Update Nord VPN IPs
 on:
   schedule:
     - cron:  '0 0 * * 0'
@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Download server lists and update list files
         run: |
-          curl --silent "https://api.nordvpn.com/v1/servers?limit=0" | jq --raw-output '.[].station' | sort > nord_vpn_ips.txt
+          curl --silent "https://api.nordvpn.com/v1/servers?limit=0" | jq --raw-output '.[].station' | sort > nordvpn-ips.txt
 
       - name: Commit and push changes
         uses: actions-js/push@master
