@@ -1,1 +1,1 @@
-# NordVPN IPs list
+# IPs list for some popular VPN servers.
