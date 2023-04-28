@@ -1,28 +1,22 @@
 name: Update
-
 on:
   schedule:
     - cron:  '0 0 * * 0'
-
   workflow_dispatch:
-
+  
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Download server lists and update list files
         run: |
-          curl --silent "https://api.nordvpn.com/v1/servers?limit=16384" | jq --raw-output '.[].station' | sort > nord_vpn_ips.txt
+          curl --silent "https://api.nordvpn.com/v1/servers?limit=0" | jq --raw-output '.[].station' | sort > nord_vpn_ips.txt
 
-      - name: push
-        uses: actions-x/commit@v2
+      - name: Commit and push changes
+        uses: actions-js/push@master
         with:
-          email: me@example.com
-          name: GitHub Actions
-          branch: main
-          files: '*.txt'
-          repository: https://github.com/coocoobau/nordvpn
-          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: "Automatically updated IP lists using GitHub Actions"
+          
