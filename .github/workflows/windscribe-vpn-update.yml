@@ -1,0 +1,22 @@
+name: Update Windscribe VPN IPs
+on:
+  schedule:
+    - cron:  '0 0 * * 0'
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download server lists and update list files
+        run: |
+          curl --silent https://assets.windscribe.com/serverlist/mob-v2/1/$(date +%s) | jq --raw-output '.data[].groups[] | .ping_ip, (.nodes[]? | .ip, .ip2, .ip3, .ip4, .ip5) | select(. != null)' | sort | uniq > windscribevpn-ips.txt
+
+      - name: Commit and push changes
+        uses: actions-js/push@master
+        with:
+          branch: ${{ github.ref }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: "Automatically updated Windscribe IP lists using GitHub Actions"
+          
