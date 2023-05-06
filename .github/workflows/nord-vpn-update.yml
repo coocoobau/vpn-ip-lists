@@ -1,7 +1,7 @@
 name: Update Nord VPN IPs
 on:
   schedule:
-    - cron:  '0 0 * * 0'
+    - cron:  '15 0 * * 0'
   workflow_dispatch:
   
 jobs:
@@ -18,5 +18,5 @@ jobs:
         with:
           branch: ${{ github.ref }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: "Automatically updated IP lists using GitHub Actions"
+          message: "Automatically updated Nord VPN IP lists."
           
