@@ -11,8 +11,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Download server lists and update list files
         run: |
-          curl --silent https://assets.windscribe.com/serverlist/mob-v2/1/$(date +%s) | jq --raw-output '.data[].groups[] | .ping_ip, (.nodes[]? | .ip, .ip2, .ip3, .ip4, .ip5) | select(. != null)' | sort | uniq > windscribevpn-ips.txt
-
+          curl --silent https://assets.windscribe.com/serverlist/mob-v2/0/$(date +%s) | jq --raw-output '.data[].groups[] | .ping_ip, (.nodes[]? | .ip, .ip2, .ip3, .ip4, .ip5) | select(. != null)' > $RUNNER_TEMP/windscribevpn-ips.txt
+          curl --silent https://assets.windscribe.com/serverlist/mob-v2/1/$(date +%s) | jq --raw-output '.data[].groups[] | .ping_ip, (.nodes[]? | .ip, .ip2, .ip3, .ip4, .ip5) | select(. != null)' >> $RUNNER_TEMP/windscribevpn-ips.txt
+          cat $RUNNER_TEMP/windscribevpn-ips.txt | sort | uniq > windscribevpn-ips.txt
+          
       - name: Commit and push changes
         uses: actions-js/push@master
         with:
